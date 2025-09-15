@@ -9,7 +9,7 @@ In this assignment, we will be working with a dataset reporting the number of cr
 You will need to load the tidyverse library
 
 ```{r}
-
+library(tidyverse)
 ```
 
 Then you'll load the data from the web. The URL for the data is: https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/pg_crime_totals_2024.csv. You will create a dataframe called `pg_crime` that contains the data from this URL.
@@ -17,19 +17,25 @@ Then you'll load the data from the web. The URL for the data is: https://raw.git
 ### Task 2: Load the Data and Describe It
 
 ```{r}
+pg_crime <- read_csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/pg_crime_totals_2024.csv")
 ```
 ### Task 3: Describe the Data
 
 You should examine that dataframe carefully by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the categories of incidents. From a reporting standpoint, are any of the categories more important than others? Why or why not? Do any of them make the job of summarizing the data more difficult? Why or why not?
 
 ANSWER HERE
+It appears that the crime level is pretty high for PG County. Looking at a glance, it seems like most of the high crime rates are vehicle related, those being accidents, auto theft and auto stolen. My first thought is that maybe micromobility is playing a role in this. With electric scooters and bikes taking over, I assume that they would be included and impacting the crime info.
 
 ### Task 4: Calculating Averages
 
 Calculate the total number of incidents per month for each category using `mutate()`, calling the new column `total_incidents`. Then calculate the average number of incidents per month for each category of crime, calling the new column `average_incidents`. Assign the result to a new dataframe called `pg_crime_averages`.
 
 ```{r}
+pg_crime_averages <- pg_crime|>
+  mutate(total_incidents =  rowSums(across(2:13))) |>
+  mutate(average_incidents = total_incidents / 12)
 
+  
 ```
 
 ### Task 5: Describe the Averages
@@ -37,13 +43,17 @@ Calculate the total number of incidents per month for each category using `mutat
 Examine the new dataframe, `pg_crime_averages`, by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the average number of incidents per month for each category. Which categories have the highest average number of incidents per month? Which have the lowest? What does this tell you about the pattern of crime in Prince George's County? Are there categories that you have questions about? Why or why not?
 
 ANSWER HERE
-
+The highest averages are the three I listed above: accidents, auto theft and auto stolen. I would say this makes sense. PG county is a pretty dense area, in my opinion. With there being a college campus in the county, a lot of the numbers are probably impacted by that. College students are more inexperienced when it comes to driving, explaining the accident numbers. The rest of the statistics aren't really explainable, though. Like I said, micromobility likely plays a role in the statistics.
 
 ### Task 6: Testing a Theory
 
 One theory about crime is that it is more likely to occur in the summer months. Test this theory by creating three new columns using `mutate()` that calculate the percentage change compared to the average for each category of crime for the months of June, July, and August. Call the new columns `june_change`, `july_change`, and `august_change`. Assign the result to a new dataframe called `summer_crime_averages`.
 
 ```{r}
+summer_crime_averages <- pg_crime_averages |>
+  mutate(june_change = (Jun - average_incidents) / average_incidents * 100)|>
+  mutate(july_change = (Jul - average_incidents) / average_incidents * 100)|>
+  mutate(august_change = (Aug - average_incidents) / average_incidents * 100)
 ```
 
 ### Task 7: Describe the Summer Crime Averages
@@ -51,12 +61,16 @@ One theory about crime is that it is more likely to occur in the summer months. 
 Look at the `summer_crime_averages` dataframe by clicking on it in the Environment tab in RStudio. Write a couple of sentences describing the percentage change in the average number of incidents per month for each category of crime for the months of June, July, and August. Do you see any patterns? What does this tell you about the theory that crime is more likely to occur in the summer months?
 
 ANSWER HERE
+According to the table, you could say that the theory is correct, however, as the summer continues to progress, it appears that a lot of the crime rates actually start to decrease. I think the biggest reason for this is because as more people leave UMD, which is in PG County, there is less crime. Lower population=less crime.  One trend I noticed is that the crime with high counts don't really have any big percent change over the summer. Overall, I think this theory doesn't really apply to PG County. I think there are too many other factors, like a college campus, that impact the data.
 
 ### Task 8: What's the Story?
 
 Write up a lede and nutgraf of a story focused on the crime data in Prince George's County. It could be from any of the dataframes you've created in this assignment. The lede should be a single sentence that summarizes the most important information in the data. The nutgraf should be a paragraph that provides more context and explains why the data is important.
 
 ANSWER HERE
+Lede: As classes start at the University of Maryland, so does the rise of theft in Prince George's County
+
+Nutgraph: An analysis of monthly crime in Prince George's County indicate that theft rates go down during summer months. The monthly average for theft in PG County is 284.083333. In June, the theft count was 1.4373717% lower. In July, the count dropped by 1.7893811. In August, we saw a huge drop of 8.477559%. These numbers make it clear that there is some type of correlation between students on University of Maryland campus and theft rates.
 
 ### Task 9: Save Your Work and Put it on GitHub
 
