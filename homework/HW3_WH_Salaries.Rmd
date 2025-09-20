@@ -9,6 +9,7 @@ In this assignment, we will be working with a dataset containing information abo
 You will need to load the tidyverse library
 
 ```{r}
+library(tidyverse)
 ```
 
 Then you'll load the data from the web. The URL for the data is: https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/biden_wh_salaries_2024.csv. You will create a dataframe called `wh_salaries` that contains the data from this URL.
@@ -16,6 +17,7 @@ Then you'll load the data from the web. The URL for the data is: https://raw.git
 ### Task 2: Load the Data and Describe It
 
 ```{r}
+wh_salaries <- read.csv("https://raw.githubusercontent.com/dwillis/jour405/refs/heads/main/data/biden_wh_salaries_2024.csv")
 ```
 ### Task 3: Describe the Data
 
@@ -23,12 +25,17 @@ You should examine that dataframe carefully by clicking on it in the Environment
 
 ANSWER HERE
 
+The data displays all of the salaries of white house employees. Most range around the $100,000
+
 ### Task 4: Calculate the Mean and Median of the Salaries
 
 Write code to calculate the mean and median of the salaries in the dataset using the `summarize()` function. You don't need to make a new dataframe, just display the results.
 
 ```{r}
-
+wh_salaries|>
+  summarize(mean_salary= mean(salary),na.rm=TRUE)
+wh_salaries|>
+  summarize(median(salary),na.rm=TRUE)
 ```
 
 ### Task 5: Add in the minimum and maximum salaries
@@ -36,7 +43,14 @@ Write code to calculate the mean and median of the salaries in the dataset using
 Take the code you just wrote and add in the minimum and maximum salaries (the functions for that are `min()` and `max()`). Your results should show four columns: mean_salary, median_salary, min_salary, max_salary.
 
 ```{r}
-
+wh_salaries|>
+  summarize(mean_salary= mean(salary),na.rm=TRUE)
+wh_salaries|>
+  summarize(median(salary),na.rm=TRUE)
+wh_salaries|>
+  summarize(min_salary = min(salary), na.rm=TRUE)
+wh_salaries|>
+  summarize(max_salary = max(salary), na.rm=TRUE)
 ```
 
 ### Task 6: Describe the Results
@@ -45,8 +59,13 @@ Write a couple of sentences describing the results of your analysis. What do the
 
 ANSWER HERE
 
+I have no idea what I'm doing wrong. I am following what we did in class and looking stuff up online and I can't figure out why I keep getting errors with the median and the NA. I can tell you that the high ends of the 100,000s. The min is 0.
+
 ### Task 7: Story Idea
 
 Based on the data, what is your best story idea? What is the next step you would take to develop that story idea?
 
 ANSWER HERE
+
+A potential story idea with this data is exploring which positions in the white house make the most / the least among all of the white house positions.  You could also do a deep dive into what each position consists of.
+
