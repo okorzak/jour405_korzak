@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Owen Korzak final project part 1"
 output: html_notebook
 ---
 
@@ -7,12 +7,70 @@ This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute
 
 Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
 
-```{r}
-plot(cars)
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
 
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+```{r}
+data <- read_csv("https://raw.githubusercontent.com/wellsdata/Jour405_student_repo_fall_2025/refs/heads/main/project/college_scorecard_2021_2024.csv")
+```
+Questions:
 
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+-- What does it contain and what time period does it cover?
+
+The data contains statistics about college tuition fees and enrollment from 2021 to 2024.
+
+--Which columns will be most important for your analysis?
+
+This is kind of tricky, as most of my columns are pretty much the same. However, I think the ones I might look at the most are comparing the enrollment and tuition fees from 2021-22 to 2023-24, so we can see if there are any trends.
+
+--What's missing that you might need or want?
+
+The data only includes tuition. It may help to find room and board numbers, financial aid and to factor in inflation.
+
+--Select a relevant column and produce basic descriptive statistics on the mean, median, lowest and highest values.
+
+```{r}
+data |>
+  summarize(
+    mean = mean(`2021_22_tuitionfee_out`, na.rm = TRUE),
+    median = median(`2021_22_tuitionfee_out`, na.rm = TRUE),
+    min = min(`2021_22_tuitionfee_out`, na.rm = TRUE),
+    max = max(`2021_22_tuitionfee_out`, na.rm = TRUE)
+  )
+```
+```{r}
+data |>
+  summarize(
+    mean = mean(`2023_24_tuitionfee_out`, na.rm = TRUE),
+    median = median(`2023_24_tuitionfee_out`, na.rm = TRUE),
+    min = min(`2023_24_tuitionfee_out`, na.rm = TRUE),
+    max = max(`2023_24_tuitionfee_out`, na.rm = TRUE)
+  )
+```
+```{r}
+data |>
+  summarize(
+    mean = mean(`2021_22_tuitionfee_in`, na.rm = TRUE),
+    median = median(`2021_22_tuitionfee_in`, na.rm = TRUE),
+    min = min(`2021_22_tuitionfee_in`, na.rm = TRUE),
+    max = max(`2021_22_tuitionfee_in`, na.rm = TRUE)
+  )
+```
+```{r}
+data |>
+  summarize(
+    mean = mean(`2023_24_tuitionfee_in`, na.rm = TRUE),
+    median = median(`2023_24_tuitionfee_in`, na.rm = TRUE),
+    min = min(`2023_24_tuitionfee_in`, na.rm = TRUE),
+    max = max(`2023_24_tuitionfee_in`, na.rm = TRUE)
+  )
+```
+
+
+Project idea and hypothesis:
+
+Based on the data I collected with the csv file, it appears that out of state tuition is growing a lot faster than in state. The out of state tuition mean rose by over 1000, while the in state tuition rose by around 800.
