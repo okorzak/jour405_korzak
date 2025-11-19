@@ -1,5 +1,5 @@
 ---
-title: "Owen Korzak final project part 1"
+title: "Owen Final Proe"
 output: html_notebook
 ---
 
@@ -49,7 +49,7 @@ data |>
     median = median(`2023_24_tuitionfee_out`, na.rm = TRUE),
     min = min(`2023_24_tuitionfee_out`, na.rm = TRUE),
     max = max(`2023_24_tuitionfee_out`, na.rm = TRUE)
-  )
+    )
 ```
 ```{r}
 data |>
