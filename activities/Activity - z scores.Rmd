@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
  "Baltimore County 911 Overdose Calls Analysis"
-author: **YOUR NAME HERE**
+author: **Owen Korzak**
 
 
 ```{r setup, include=FALSE}
@@ -86,6 +86,8 @@ Let's visualize the time series of daily calls. What patterns do you see?
 
 **Write your answer here**
 
+Most of the days receive around 7 to 15 calls. Some days receive more and some receive less; Those are found in the unusual_days data set. In the next step, where we look at the spikes, most days are in the middle of the chart at around 10.
+
 ```{r daily-calls-plot}
 # Plot daily call volume
 ggplot(daily_calls, aes(x = date, y = call_count)) +
@@ -146,6 +148,8 @@ unusual_days |>
 Let's visualize these unusual days in the context of the full dataset. How do they differ from your answer on Task 3?
 
 **Write your answer here**
+
+The unusual days have either at least 18 calls or 3 or less calls. There is not really a true pattern, in my opinion; The days are scattered throughout the year.
 
 ```{r plot-unusual-days}
 # Create a clean factor for the plot legend
@@ -217,6 +221,8 @@ ggplot(dow_summary, aes(x = day_of_week, y = avg_calls)) +
 We can also calculate z-scores that account for the day of the week pattern. How would you describe the day with the highest z-score without using the term "z-score"?
 
 **Write your answer here**
+
+It appears that the days that are considered the weekend have higher rates of calls compared to the middle of the week.
 
 ```{r day-of-week-z-scores}
 # Calculate day-of-week adjusted z-scores
@@ -307,3 +313,5 @@ top_outliers
 Based on our z-score analysis, what are some potential angles for reporting? What would your next steps be and what would you tell an editor about your findings?
 
 **Write your answer here**
+
+A good angle could be talking about the large spike in calls that there was between July and October. We could also talk about how there appears to be some form of spike every so often. Talking to dispatchers could be a good way to take a next step. They could potentially provide more details for us. 
