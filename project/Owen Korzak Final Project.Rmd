@@ -39,38 +39,107 @@ data |>
     mean = mean(`2021_22_tuitionfee_out`, na.rm = TRUE),
     median = median(`2021_22_tuitionfee_out`, na.rm = TRUE),
     min = min(`2021_22_tuitionfee_out`, na.rm = TRUE),
-    max = max(`2021_22_tuitionfee_out`, na.rm = TRUE)
+    max = max(`2021_22_tuitionfee_out`, na.rm = TRUE),
+    sd = sd(`2021_22_tuitionfee_out`, na.rm = TRUE)
   )
 ```
+This is showing me the mean, median, min, max and sd of out-of-state tuition fees in 2021-22.
 ```{r}
 data |>
   summarize(
     mean = mean(`2023_24_tuitionfee_out`, na.rm = TRUE),
     median = median(`2023_24_tuitionfee_out`, na.rm = TRUE),
     min = min(`2023_24_tuitionfee_out`, na.rm = TRUE),
-    max = max(`2023_24_tuitionfee_out`, na.rm = TRUE)
+    max = max(`2023_24_tuitionfee_out`, na.rm = TRUE),
+     sd = sd(`2023_24_tuitionfee_out`, na.rm = TRUE)
     )
 ```
+This is showing me the mean, median, min, max and sd of out-of-state tuition fees in 2022-24.
 ```{r}
 data |>
   summarize(
     mean = mean(`2021_22_tuitionfee_in`, na.rm = TRUE),
     median = median(`2021_22_tuitionfee_in`, na.rm = TRUE),
     min = min(`2021_22_tuitionfee_in`, na.rm = TRUE),
-    max = max(`2021_22_tuitionfee_in`, na.rm = TRUE)
+    max = max(`2021_22_tuitionfee_in`, na.rm = TRUE),
+    sd = sd(`2021_22_tuitionfee_in`, na.rm = TRUE)
   )
 ```
+This is showing me the mean, median, min, max and sd of in-state tuition fees in 2021-22.
 ```{r}
 data |>
   summarize(
     mean = mean(`2023_24_tuitionfee_in`, na.rm = TRUE),
     median = median(`2023_24_tuitionfee_in`, na.rm = TRUE),
     min = min(`2023_24_tuitionfee_in`, na.rm = TRUE),
-    max = max(`2023_24_tuitionfee_in`, na.rm = TRUE)
+    max = max(`2023_24_tuitionfee_in`, na.rm = TRUE),
+    sd = sd(`2023_24_tuitionfee_in`, na.rm = TRUE)
   )
 ```
+This is showing me the mean, median, min, max and sd of in-state tuition fees in 2023-24.
 
 
 Project idea and hypothesis:
 
 Based on the data I collected with the csv file, it appears that out of state tuition is growing a lot faster than in state. The out of state tuition mean rose by over 1000, while the in state tuition rose by around 800.
+
+Null Hypothesis: Out-of-state tuition is not growing significantly faster than in-state tuition Alternative: Out-of-state tuition is growing significantly faster than in-state tuition
+
+Hypothesis Test 1: Paired t-test
+
+```{r}
+data <- data |>
+  mutate(
+    in_change = `2023_24_tuitionfee_in` - `2021_22_tuitionfee_in`,
+    out_change = `2023_24_tuitionfee_out` - `2021_22_tuitionfee_out`
+  )
+
+```
+I am creating variables to run a t-test for my hypothesis
+
+```{r}
+t_test_change <- t.test(
+  data$out_change,
+  data$in_change,
+  paired = TRUE,
+  alternative = "greater"
+)
+
+t_test_change
+```
+Because the p-value is 5.092e-06 < .05, we reject the null hypothesis at 95% confidence.
+There is statistical evidence that out-of-state tuition is growing significantly faster than in-state tuition
+
+Null hypothesis #2: There is no difference in tuiton trends between states
+Alternative: There is a difference in tuiton trends between states
+
+Hypothesis Test #2: 2 Sample t-test
+```{r}
+data <- data |>
+  mutate(
+    total_change = ( `2023_24_tuitionfee_in` + `2023_24_tuitionfee_out` ) -
+                   ( `2021_22_tuitionfee_in` + `2021_22_tuitionfee_out` )
+  )
+```
+Creating variables to run the test through
+
+```{r}
+t_test_states <- t.test(total_change ~ state, data = data)
+t_test_states
+
+```
+The p-value of 0.3607 is way higher than .05, meaning that we fail to reject the null hypothesis at 95% significance. There is not enough statistical evidence that there is a difference in tuiton trends between MD and VA.
+
+Visual test:
+
+```{r}
+ggplot(data, aes(x = in_change, y = out_change)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") + # Add linear model line
+  labs(
+    title = "Change in In-State vs Out-of-State Tuition (2021–2024)",
+    x = "In-State Tuition Change",
+    y = "Out-of-State Tuition Change"
+  )
+```
+Each point represents a school, the x-axis represents in-state tuition change while the y-axis represents an out-of-state tuition change.  The blue line is a line of best fit. The graph shows that as in-state tuition grows, so does out of state. Additionally, nearly every point has had a rise in both in and out-of-state tuition. This chart helps support both t-tests.
