@@ -142,4 +142,4 @@ ggplot(data, aes(x = in_change, y = out_change)) +
     y = "Out-of-State Tuition Change"
   )
 ```
-Each point represents a school, the x-axis represents in-state tuition change while the y-axis represents an out-of-state tuition change.  The blue line is a line of best fit. The graph shows that as in-state tuition grows, so does out of state. Additionally, nearly every point has had a rise in both in and out-of-state tuition. This chart helps support both t-tests.
+Each point represents a school, the x-axis represents in-state tuition change while the y-axis represents an out-of-state tuition change.  The blue line is a line of best fit. The graph shows that as in-state tuition grows, so does out-of-state. However, the chart shows that many schools had a larger increase in out-of-state tuition. The graph helps back up both t-tests. 
