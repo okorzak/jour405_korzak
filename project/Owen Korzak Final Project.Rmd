@@ -1,5 +1,5 @@
 ---
-title: "Owen Final Project"
+title: "Owen Korzak Final Project"
 output: html_notebook
 ---
 
