@@ -43,7 +43,7 @@ data |>
     sd = sd(`2021_22_tuitionfee_out`, na.rm = TRUE)
   )
 ```
-This is showing me the mean, median, min, max and sd of out-of-state tuition fees in 2021-22.
+In 2021–22, the average out-of-state tuition was about 21,073. Tuition ranged from less than 6,000 to almost 60,000, meaning there was lots of variance. The median was 16,637, with a standard deviation of 12,907.
 ```{r}
 data |>
   summarize(
@@ -54,7 +54,7 @@ data |>
      sd = sd(`2023_24_tuitionfee_out`, na.rm = TRUE)
     )
 ```
-This is showing me the mean, median, min, max and sd of out-of-state tuition fees in 2022-24.
+By 2023–24, the average out-of-state tuition rose by 1,048 to 22,121. That represents a 4.97% increase, which is noticeably higher than the dollar increase seen for in-state students. The median remained at 16,637, while the range varied from 6,660 to 64,525, with a standard deviation of around 13,711.
 ```{r}
 data |>
   summarize(
@@ -65,7 +65,7 @@ data |>
     sd = sd(`2021_22_tuitionfee_in`, na.rm = TRUE)
   )
 ```
-This is showing me the mean, median, min, max and sd of in-state tuition fees in 2021-22.
+In-state tuition averaged about 17,046 in 2021-22. The range spanned all the way from less than 4,000 to nearly 60,000. The median was 13,515, with a standard deviation at around 13,338.
 ```{r}
 data |>
   summarize(
@@ -76,42 +76,46 @@ data |>
     sd = sd(`2023_24_tuitionfee_in`, na.rm = TRUE)
   )
 ```
-This is showing me the mean, median, min, max and sd of in-state tuition fees in 2023-24.
+In-state tuition rose by 852.27 to 17,989.15, an increase of around 5%. That means in-state tuition not only increased by a smaller dollar amount, but a lower percentage as well. The median increased to 14,115, while the range varied under 4000 to north of 64,000. Standard deviation rose to close to 14,000.
 
 
 Project idea and hypothesis:
 
 Based on the data I collected with the csv file, it appears that out of state tuition is growing a lot faster than in state. The out of state tuition mean rose by over 1000, while the in state tuition rose by around 800.
 
-Null Hypothesis: Out-of-state tuition is not growing significantly faster than in-state tuition Alternative: Out-of-state tuition is growing significantly faster than in-state tuition
+Null Hypothesis: 
+The mean percent increase of out-of-state tuition is less than or equal to the mean percent increase of in-state tuition.
+Alternative:
+The mean percent increase of out-of-state tuition is greater than the mean percent increase in in-state tuition.
 
 Hypothesis Test 1: Paired t-test
 
 ```{r}
 data <- data |>
-  mutate(
-    in_change = `2023_24_tuitionfee_in` - `2021_22_tuitionfee_in`,
-    out_change = `2023_24_tuitionfee_out` - `2021_22_tuitionfee_out`
-  )
-
+mutate(
+in_change = `2023_24_tuitionfee_in` - `2021_22_tuitionfee_in`,
+out_change = `2023_24_tuitionfee_out` - `2021_22_tuitionfee_out`,
+in_pct = in_change / `2021_22_tuitionfee_in` * 100,
+out_pct = out_change / `2021_22_tuitionfee_out` * 100
+)
 ```
-I am creating variables to run a t-test for my hypothesis
+Here, I created a new variable to test my hypothesis. I am now comparing percent change to help narrow the scope, rather than a vague hypothesis.
 
 ```{r}
 t_test_change <- t.test(
-  data$out_change,
-  data$in_change,
+  data$out_pct,
+  data$in_pct,
   paired = TRUE,
   alternative = "greater"
 )
 
 t_test_change
 ```
-Because the p-value is 5.092e-06 < .05, we reject the null hypothesis at 95% confidence.
-There is statistical evidence that out-of-state tuition is growing significantly faster than in-state tuition
+Because the p-value is 0.6122 > .05, we fail to reject the null hypothesis at 95% confidence.
+There is not statistical evidence that the mean percent increase of out-of-state tuition is greater than the mean percent increase in in-state tuition.
 
-Null hypothesis #2: There is no difference in tuiton trends between states
-Alternative: There is a difference in tuiton trends between states
+Null hypothesis #2: Mean tuition change does not change between VA and MD.
+Alternative: Mean tuition change differs between VA and MD.
 
 Hypothesis Test #2: 2 Sample t-test
 ```{r}
@@ -142,4 +146,28 @@ ggplot(data, aes(x = in_change, y = out_change)) +
     y = "Out-of-State Tuition Change"
   )
 ```
-Each point represents a school, the x-axis represents in-state tuition change while the y-axis represents an out-of-state tuition change.  The blue line is a line of best fit. The graph shows that as in-state tuition grows, so does out-of-state. However, the chart shows that many schools had a larger increase in out-of-state tuition. The graph helps back up both t-tests. 
+Each point represents a school, the x-axis represents in-state tuition change while the y-axis represents an out-of-state tuition change.  The blue line is a line of best fit. The graph shows that as in-state tuition grows, so does out-of-state. However, the chart shows that many schools had a larger increase in out-of-state tuition. The chart also shows that there appears to be a cluster at zero, meaning that a good chunk of the schools used in the data had little to no change in both in and out of state tuition.
+
+Story Pitch:
+
+Headline:
+Some Virginia and Maryland Colleges Keep Tuition Consistent While Prices Rise
+
+Main Findings:
+
+When comparing in-state and out-of-state tuition changes from 2021–22 to 2023–24, the p-value was much larger than .05. This means there is no significant difference between how fast the two types of tuition grew.
+
+In conclusion, despite  larger dollar increases, out-of-state tuition is not increasing at a significantly faster rate than in-state. Tuition increases, according to the data, seem to be more inconsistent and school-specific as opposed to a national, or in this case, regional, trends.
+
+
+Potential Problems:
+
+The data is only available since 2021, meaning it would be hard to assume any long-term trends. Additionally, the data is only based on tuition and doesn't include any housing and dining or any extra fees. On top of that, the data doesn't account for inflation, which is important; A cluster of schools had little to no tuition change, meaning they may actually have had an overall decrease.
+
+Reporting Plan:
+To complete this story, I would first look at the data, find the schools with little to no tuition changes and try to interview their administrators. I would ask them why and how they were able to either maintain the same pricing since 2021, or have minimal change. After that, I would try to talk to administrators at schools that had a large increase in costs, asking them how and why they had to or wanted to increase pricing. I would then compare the responses. On top of this, I would try to talk to students at schools that have both maintained the same pricing or had a large increase, asking how much of an impact price had on their decision to attend their school.
+
+
+
+Overall, given the data, I think that this is the best and most realistic story that a reporter would be able to complete.
+
